@@ -9,7 +9,7 @@ use Illuminate\Support\Str;
 class Product extends Model
 {
     //
-     use HasFactory;
+    use HasFactory;
 
     protected $primaryKey = 'product_code';
     public $incrementing = false;
@@ -18,14 +18,19 @@ class Product extends Model
     protected $fillable = [
         'name',
         'description',
-        'price'
+        'price',
+        'image',
     ];
 
     protected static function booted()
-{
-    static::creating(function ($product) {
-        $product->product_code = 'PRD-' . date('Ymd') . '-' . strtoupper(Str::random(5));
-    });
-}
+    {
+        static::creating(function ($product) {
+            $product->product_code = 'PRD-' . date('Ymd') . '-' . strtoupper(Str::random(5));
+        });
+    }
 
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }

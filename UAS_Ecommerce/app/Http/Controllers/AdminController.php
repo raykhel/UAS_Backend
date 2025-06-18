@@ -34,10 +34,19 @@ class AdminController extends Controller
         $request->validate([
             'name' => 'required',
             'price' => 'required|numeric',
-            'description' => 'nullable'
+            'description' => 'nullable',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
 
-        Product::create($request->all());
+        $data = $request->all();
+
+        if ($request->hasFile('image')) {
+            $filename = time() . '-' . $request->file('image')->getClientOriginalName();
+            $request->file('image')->move(public_path('images'), $filename);
+            $data['image'] = 'images/' . $filename;
+        }
+
+        Product::create($data);
         return redirect('/admin')->with('success', 'Produk ditambahkan');
     }
 
@@ -54,11 +63,18 @@ public function update(Request $request, $product_code)
         $request->validate([
             'name' => 'required',
             'price' => 'required|numeric',
-            'description' => 'nullable'
+            'description' => 'nullable',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
 
         $product = Product::where('product_code', $product_code)->firstOrFail();
-        $product->update($request->all());
+
+        $data = $request->all();
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('images', 'public');
+        }
+
+        $product->update($data);
         return redirect('/admin')->with('success', 'Produk diupdate');
     }
 
