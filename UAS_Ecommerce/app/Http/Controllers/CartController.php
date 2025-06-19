@@ -68,4 +68,43 @@ class CartController extends Controller
 
         return redirect('/orders')->with('success', 'Checkout berhasil!');
     }
+
+    public function increase($product_code)
+    {
+        $cart = session()->get('cart', []);
+        if (isset($cart[$product_code])) {
+            $cart[$product_code]['qty'] += 1;
+            session()->put('cart', $cart);
+        }
+        return response()->json(['success' => true]);
+    }
+
+    public function decrease($product_code)
+    {
+        $cart = session()->get('cart', []);
+        if (isset($cart[$product_code])) {
+            $cart[$product_code]['qty'] -= 1;
+            if ($cart[$product_code]['qty'] <= 0) {
+                unset($cart[$product_code]);
+            }
+            session()->put('cart', $cart);
+        }
+        return response()->json(['success' => true]);
+    }
+
+    public function remove($product_code)
+    {
+        $cart = session()->get('cart', []);
+        if (isset($cart[$product_code])) {
+            unset($cart[$product_code]);
+            session()->put('cart', $cart);
+        }
+        return response()->json(['success' => true]);
+    }
+
+    public function clear()
+    {
+        session()->forget('cart');
+        return response()->json(['success' => true]);
+    }
 }

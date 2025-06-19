@@ -43,4 +43,5 @@
     @endforeach
   </tbody>
 </table>
+<a href="/" class="btn btn-outline-primary mb-3">Kembali ke Halaman Utama</a>
 @endsection

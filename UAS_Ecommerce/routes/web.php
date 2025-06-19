@@ -17,6 +17,10 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('/cart/add/{product_code}', [CartController::class, 'add']);
 Route::get('/cart', [CartController::class, 'index']);
 Route::post('/cart/checkout', [CartController::class, 'checkout']);
+Route::post('/cart/increase/{product_code}', [CartController::class, 'increase']);
+Route::post('/cart/decrease/{product_code}', [CartController::class, 'decrease']);
+Route::post('/cart/remove/{product_code}', [CartController::class, 'remove']);
+Route::post('/cart/clear', [CartController::class, 'clear']);
 Route::get('/orders', function () {
     $orders = \App\Models\Order::with('items.product')->where('user_id', Auth::id())->get();
     return view('orders.index', compact('orders'));
