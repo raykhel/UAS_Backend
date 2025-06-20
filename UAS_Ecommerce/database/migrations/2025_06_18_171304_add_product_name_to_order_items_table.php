@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::table('order_items', function (Blueprint $table) {
             //
-            Schema::table('order_items', function (Blueprint $table) {
+            if (!Schema::hasColumn('order_items', 'product_name')) {
                 $table->string('product_name')->after('product_id');
-            });
+            }
         });
     }
 
